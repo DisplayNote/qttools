@@ -57,6 +57,7 @@ bool hardenedRuntime = false;
 bool appstoreCompliant = false;
 int logLevel = 1;
 bool deployFramework = false;
+bool deployDylibs = true;
 
 using std::cout;
 using std::endl;
@@ -335,6 +336,9 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
             ++part;
             continue;
         } if (state == DylibName) {
+
+            if (!deployDylibs) {continue;}
+
             name = currentPart;
             info.isDylib = true;
             info.frameworkName = name;

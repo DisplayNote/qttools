@@ -56,6 +56,7 @@ int main(int argc, char **argv)
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
         qDebug() << "   -fs=<filesystem>   : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
+        qDebug() << "   -no-dylibs          : Just deploy Frameworks, not dylibs. Used to manually deploy external libs.";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -100,6 +101,7 @@ int main(int argc, char **argv)
     extern bool hardenedRuntime;
     extern bool appstoreCompliant;
     extern bool deployFramework;
+    extern bool deployDylibs;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -185,6 +187,9 @@ int main(int argc, char **argv)
                 LogError() << "Missing filesystem type";
             else
                 filesystem = argument.mid(index+1);
+        } else if (argument == QByteArray("-no-dylibs")) {
+            LogDebug() << "Argument found:" << argument;
+            deployDylibs = false;
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 1;
